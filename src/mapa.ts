@@ -128,7 +128,8 @@ export function mountMapa() {
   ladrilhos.getTileUrl = (c) => urlOriginal({ x: c.x, y: -c.y - 1, z: c.z } as unknown as L.Coords);
   ladrilhos.addTo(map);
   L.control.zoom({ position: "topright", zoomInTitle: "Aproximar", zoomOutTitle: "Afastar" }).addTo(map);
-  map.setView([869, 1255], isMobile() ? 0 : 1);
+  const inicial = locais.get("sheidrost"); // abre centrado em Sheidrost
+  map.setView(inicial ? [inicial.y, inicial.x] : [869, 1255], isMobile() ? 0 : 1);
   if (!isMobile() && !location.hash.includes("local")) map.panBy([-230, 0], { animate: false });
   showCoords(map);
   
