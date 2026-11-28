@@ -78,9 +78,18 @@ export function abrirLeitor(src: string, alt: string) {
   // arrastar (1 dedo/mouse) e pinça (2 dedos)
   const toques = new Map<number, { x: number; y: number }>();
   let dist0 = 0;
-  area.addEventListener("pointerdown", (e) => { area.setPointerCapture(e.pointerId); toques.set(e.pointerId, { x: e.clientX, y: e.clientY }); dist0 = 0; });
+  let cliqueFora: { id: number; x: number; y: number } | null = null;
+  area.addEventListener("pointerdown", (e) => {
+    cliqueFora = toques.size === 0 && e.button === 0 && e.target === area
+      ? { id: e.pointerId, x: e.clientX, y: e.clientY }
+      : null;
+    area.setPointerCapture(e.pointerId);
+    toques.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    dist0 = 0;
+  });
   area.addEventListener("pointermove", (e) => {
     const ant = toques.get(e.pointerId); if (!ant) return;
+    if (cliqueFora?.id === e.pointerId && Math.hypot(e.clientX - cliqueFora.x, e.clientY - cliqueFora.y) > 5) cliqueFora = null;
     toques.set(e.pointerId, { x: e.clientX, y: e.clientY });
     if (toques.size === 2) {
       const [a, b] = [...toques.values()], d = Math.hypot(a.x - b.x, a.y - b.y), r = area.getBoundingClientRect();
@@ -88,6 +97,16 @@ export function abrirLeitor(src: string, alt: string) {
       dist0 = d;
     } else if (k > 1) { tx += e.clientX - ant.x; ty += e.clientY - ant.y; aplicar(); }
   });
-  const solta = (e: PointerEvent) => { toques.delete(e.pointerId); dist0 = 0; };
+  const solta = (e: PointerEvent) => {
+    toques.delete(e.pointerId);
+    dist0 = 0;
+    if (e.type === "pointercancel") cliqueFora = null;
+  };
   area.addEventListener("pointerup", solta); area.addEventListener("pointercancel", solta);
+  area.addEventListener("click", (e) => {
+    const inicio = cliqueFora;
+    cliqueFora = null;
+    if (!inicio || Math.hypot(e.clientX - inicio.x, e.clientY - inicio.y) > 5) return;
+    if (document.elementFromPoint(e.clientX, e.clientY) === area) fechar();
+  });
 }

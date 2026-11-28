@@ -76,13 +76,6 @@ function blocoDia(diaReal: number, turnoAtual: number | null) {
   const ds = [0, 1, 2].map((t) => phantyrDe(diaReal, t));
   return `<div class="cal-cartoes">${ds.map((d, i) => cartao(i, d, turnoAtual === i)).join("")}</div>${ds.map(especialHtml).join("")}`;
 }
-/** Uma linha por dia de Phantyr, para a lista dos próximos dias. */
-function listaDia(diaReal: number) {
-  const ds = [0, 1, 2].map((t) => phantyrDe(diaReal, t));
-  const mudou = (d: DiaPhantyr) => d.estacao !== ds[0].estacao || d.ano !== ds[0].ano;
-  return `<li class="cal-lista-dia"><h3>${esc(dataBr(diaReal))} <small>${esc(ds[0].estacao)} · ${ds[0].ano}</small></h3><ul>${ds.map((d, i) =>
-    `<li><span class="muted">Dia ${i + 1}</span> ${esc(d.semana)}, ${d.dia} de ${esc(d.mes)}${mudou(d) ? ` <small>(${esc(d.estacao)} · ${d.ano})</small>` : ""}${d.especial ? ` <em>${esc(semTitulo(d.especial.mensagem))}</em>` : ""}</li>`).join("")}</ul></li>`;
-}
 
 export function montarCalendario() {
   const sec = document.createElement("section");
@@ -100,8 +93,6 @@ export function montarCalendario() {
       <h2 class="ribbon">Consultar uma data</h2>
       <div class="viagem-campo"><label for="cal-data">Data real</label><div><input type="date" id="cal-data"></div></div>
       <div id="cal-consulta"></div>
-      <h2 class="ribbon">Próximos dias</h2>
-      <ul class="cal-lista" id="cal-proximos"></ul>
     </div>
 
     <div data-painel="estrutura" hidden>
@@ -113,7 +104,6 @@ export function montarCalendario() {
   function atualizarAgora() {
     const a = agora();
     q("#cal-agora").innerHTML = `<p class="muted">${esc(dataBr(a.diaReal))}, ${String(a.hora).padStart(2, "0")}h</p><p class="cal-regra">1 dia real = ${DIAS_POR_DIA_REAL} dias de Phantyr</p>${blocoDia(a.diaReal, a.turno)}`;
-    q("#cal-proximos").innerHTML = Array.from({ length: 10 }, (_, i) => listaDia(a.diaReal + i + 1)).join("");
   }
   // ----- calendário do mês de Phantyr (3 semanas de 10 dias) -----
   let ver = { ano: 0, mes: 0 }, seletor = false, anoSel = 0, escolhido: number | null = null, vistoHoje = -1;

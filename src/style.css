@@ -369,10 +369,6 @@ select.selecao option { background: var(--paper); color: var(--ink); }
 .cal-especial { margin: 8px 0; padding: 8px 10px; border-left: 4px solid var(--gold); background: rgb(255 255 255 / 0.35); font-size: 1.1rem; }
 .cal-especial p { margin: 0 0 6px; font-weight: 700; }
 .cal-especial img { width: 100%; height: auto; border-radius: 3px; }
-.cal-lista { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.cal-lista-dia h3 { font-size: 1.25rem; color: var(--accent); }
-.cal-lista-dia h3 small { font: 0.9rem var(--body, inherit); color: var(--ink-soft); margin-left: 6px; }
-.cal-lista-dia ul { list-style: none; margin: 2px 0 0; padding: 0; font-size: 1.05rem; }
 .cal-regra { margin: 0 0 8px; font: 1.15rem/1.1 var(--display); letter-spacing: 0.04em; color: var(--accent); text-align: center; }
 .cal-imagem { display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; }
 .cal-imagem img { width: 100%; height: auto; display: block; border: 2px solid var(--accent); border-radius: 3px; box-shadow: 0 3px 8px rgb(0 0 0 / 0.35); }
